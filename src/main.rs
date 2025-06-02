@@ -3,8 +3,10 @@ use std::fs::{OpenOptions, read_to_string};
 use std::io::{self, Write};
 
 fn main() {
+    // Collect command-line arguments into a vector
     let args: Vec<String> = env::args().collect();
 
+    // If no command is provided, display usage instructions
     if args.len() < 2 {
         eprintln!("Usage:");
         eprintln!("  add <task>     - Add a new task");
@@ -12,15 +14,18 @@ fn main() {
         return;
     }
 
+    // Read the command (e.g., "add" or "list")
     let command = &args[1];
 
     match command.as_str() {
         "add" => {
+            // Check if task text is provided
             if args.len() < 3 {
                 eprintln!("Please provide a task to add.");
                 return;
             }
 
+            // Join the rest of the args into one task string
             let task = &args[2..].join(" ");
             add_task(task);
         }
@@ -28,16 +33,18 @@ fn main() {
             list_tasks();
         }
         _ => {
+            // Handle unknown commands
             eprintln!("Unknown command: {}", command);
             eprintln!("Available commands: add, list");
         }
     }
 }
 
+// Appends a new task to the "todo.txt" file
 fn add_task(task: &str) {
     let mut file = OpenOptions::new()
-        .create(true)
-        .append(true)
+        .create(true)   // Create the file if it doesn't exist
+        .append(true)   // Append to the file if it exists
         .open("todo.txt")
         .expect("Could not open file");
 
@@ -45,6 +52,7 @@ fn add_task(task: &str) {
     println!("✅ Added task: {}", task);
 }
 
+// Reads and lists all tasks from "todo.txt"
 fn list_tasks() {
     let content = read_to_string("todo.txt");
 
@@ -60,6 +68,7 @@ fn list_tasks() {
             }
         }
         Err(_) => {
+            // Handle case where file doesn't exist or can't be read
             println!("🗂️ No tasks found. Start by adding one!");
         }
     }
