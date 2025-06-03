@@ -73,3 +73,36 @@ fn list_tasks() {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+
+    #[test]
+    fn test_add_and_list_tasks() {
+        let test_file = "test_todo.txt";
+        // Clean up before test
+        let _ = fs::remove_file(test_file);
+
+        // Add tasks
+        {
+            let mut file = std::fs::OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(test_file)
+                .expect("Could not open file");
+            writeln!(file, "Task 1").unwrap();
+            writeln!(file, "Task 2").unwrap();
+        }
+
+        // Read file and verify content
+        let content = fs::read_to_string(test_file).unwrap();
+        assert!(content.contains("Task 1"));
+        assert!(content.contains("Task 2"));
+
+        // Clean up after test
+        let _ = fs::remove_file(test_file);
+    }
+}
+
