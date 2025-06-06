@@ -32,7 +32,10 @@ cargo run -- add "Write blog post about Rust"
 # List tasks
 cargo run -- list
 ```
-
+### 4.  **Running Tests**
+```bash
+cargo test
+```
 > The tasks will be saved in a `todo.txt` file in the same directory.
 
 ---
